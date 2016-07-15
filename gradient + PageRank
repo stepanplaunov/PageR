@@ -21,12 +21,19 @@ class Vector:
             result[i] = self.coordinats[i] - other.coordinats[i]
         return Vector(result)
 
-    def __mul__(self, other):
+    def __mul__(self, other, other2):                                     #other = list of adjacents, other2 = list of adjacents with mass
         if type(other) == Vector:                                         #scalar mul
             result = 0
             for i in range(self.measurement):
                 result += self.coordinats[i] * other.coordinats[i]
             return result
+        elif type(other) == Graph:                                        #return Vector
+            result = [0 for i in range(self.measurement)]
+            for i in range(len(other)):
+                for j in range(self.measurement):
+                    if j in other[i]:
+                        result[j] += self.coordinats[j] * other2[i][j]
+            return Vector(result)
         else:
             result = Vector([0 for i in range(self.measurement)])
             for i in range(self.measurement):
