@@ -7,11 +7,11 @@ starttime = time.time()
 
 class Graph:
     def __init__(self, matrix):
-        self.lists = []
+        self.lists = [[] for i in range(len(matrix))]
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
                 if matrix[i][j] != 0:
-                    self.lists.append([j, matrix[i][j]])
+                    self.lists[i].append(j, matrix[i][j])
 
 
 class Vector:
