@@ -31,16 +31,17 @@ class Vector:
                 result += self.coordinats[i] * other.coordinats[i]
             return result
         elif type(other) == Graph:                                        #return Vector
-            data = other.list 
+            data = other.list
             result = [0] * (len(data))
             for i in range(len(data)):
                 for j in range(len(data[i])):
                     result[i] += self.coordinats[data[i][j][0]] * data[i][j][1]
+            return Vector(result)
         else:
             result = Vector([0 for i in range(self.measurement)])
             for i in range(self.measurement):
                 result[i] = self.coordinats[i] * other
-        return Vector(result)
+            return Vector(result)
 
     def __abs__(self):
         result = 0
