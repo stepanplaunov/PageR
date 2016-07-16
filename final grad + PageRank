@@ -17,18 +17,14 @@ def read(graph):  # matrix reading
     data = np.row_stack((data, ones))
     return data
 
-
 def norma(vector):  # 2-norma
-    return sum(vector[i] ** 2 for i in range(n)) ** 0.5
-
+    return sum(vector[i] ** 2 for i in range(vector.size)) ** 0.5
 
 def f(x):  # f(x) - permanent function
     return 0.5 * norma(np.dot(A, x) - b) ** 2
 
-
 def grad(x):  # return gradient of f(x) = 0.5 * norma(A * x) ** 2
     return np.dot(A.T, np.dot(A, x) - b)
-
 
 def f_(xnew, x, L):  # f(x) - inspection function
     return f(x) + np.dot(grad(x), xnew - x) + (L * norma(xnew - x) ** 2 / 2)
@@ -37,30 +33,31 @@ def f_(xnew, x, L):  # f(x) - inspection function
 def main():
     global A, n, x, b
     A = read(prograph)  # probability graph (matrix)
-    b = np.array([0] * (n + 1))
-    b[-1] = 1 / n
-    x = np.array([0] * n)  # PageRank vector
+    b = np.array([0.0] * (n + 1))
+    b[-1] = 1.0
+    b /= n
+    x = np.array([0.0] * n)  # PageRank vector
     x[0] = 1.0
-    EPS = 10 ** (-4)  # accuracy
+    EPS = 10 ** (-5)  # accuracy
     L = 10
-    #gradi = grad(x)
+    print(f(x))
     xnew = x - grad(x) / L
     """while f(x) > EPS:
         x = x - grad(x) / L
         #print(x)
     """
     while f(x) > EPS:
-        while f_(xnew, x, L) + EPS / 2 <= f(xnew):
+        while f_(xnew, x, L) <= f(xnew):
             L *= 2
             xnew = x - grad(x) / L
-
-        print(L)
         x = xnew
         L /= 2
         xnew = x - grad(x) / L
-    #print(x)
     print(f(x))
-    #print(time.time() - starttime)
+    print(x.sum())
+    x = x / x.sum()
+    print(f(x))
+    print(time.time() - starttime)
 
 
 main()
