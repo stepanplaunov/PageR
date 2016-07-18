@@ -20,7 +20,7 @@ def read(graph):  # matrix reading
     return data
 
 def norma(vector):  # 2-norma
-    return sum(vector[i] ** 2 for i in range(vector.size)) ** 0.5
+    return np.linalg.norm(vector, 2)
 
 def f(x):  # f(x) - permanent function
     return 0.5 * norma(A.dot(x) - b) ** 2
@@ -28,8 +28,8 @@ def f(x):  # f(x) - permanent function
 def grad(x):  # return gradient of f(x) = 0.5 * norma(A * x) ** 2
     return A.T.dot(A.dot(x) - b)
 
-def f_(xnew, x, L):  # f(x) - inspection function
-    return f(x) + np.dot(grad(x), xnew - x) + (L * norma(xnew - x) ** 2 / 2)
+def f_(xnew, x, L, gradx):  # f(x) - inspection function
+    return f(x) + np.dot(gradx, xnew - x) + (L * norma(xnew - x) ** 2 / 2)
 
 def main():
     global A, n, x, b
@@ -40,14 +40,14 @@ def main():
     b /= n
     x = np.array([0.0] * n)  # PageRank vector
     x[0] = 1.0
-    EPS = 10 ** (-5)  # accuracy
+    EPS = 10 ** (-3)  # accuracy
     L = 10
-    print(f(x))
     gradx = grad(x)
-    print(len(x), len(gradx))
     xnew = x - gradx / L
+    firstage = time.time()
+    print(firstage)
     while f(x) > EPS:
-        while f_(xnew, x, L) <= f(xnew):
+        while f_(xnew, x, L, gradx) <= f(xnew):
             L *= 2
             xnew = x - gradx / L
         #print(L, f(x))
@@ -59,6 +59,6 @@ def main():
     print(x.sum())
     x = x / x.sum()
     print(f(x))
-    print(time.time() - starttime)
+    print(time.time() - firstage )
 
 main()
