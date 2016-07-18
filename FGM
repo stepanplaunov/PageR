@@ -40,20 +40,12 @@ def main():
     b = b / n
     x = np.array([0] * n)                 #PageRank vector
     x[0] = 1.0
-    EPS = 10 ** (-4)                      #accuracy
+    EPS = 10 ** (-3)                      #accuracy
     L = 10
+    firstage = time.time()
+    print(firstage - starttime)
     y = x.copy()
     z = x.copy()
-    firstage = time.time() - starttime
-    print(firstage)
-    """while f(x) > EPS:
-        #print(x)
-        y = (2 * z + k * x) / (k + 2)
-        grady = grad(y)
-        x = y - grady / L
-        z = z - (k + 2) * grady / (2 * L)
-        k += 1
-        print(f(x))"""
     ynew = (2 * z + k * x) / (k + 2)
     grady = grad(ynew)
     xnew = ynew - grady / L
@@ -76,6 +68,6 @@ def main():
     print(sum(x))
     x = x / x.sum()
     print(f(x))
-    print(time.time() - starttime - firstage)
+    print(time.time() - firstage)
 
 main()
