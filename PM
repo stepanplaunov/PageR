@@ -35,14 +35,14 @@ def main():
     prograph.close()
     x = np.array([0.0] * n)  # PageRank vector
     x[0] = 1.0
-    EPS = 10 ** (-7)  # accuracy
-    firstage = time.time() - starttime
+    EPS = 10 ** (-3)  # accuracy
+    firstage = time.time()
     print(firstage)
     while f(x) > EPS:
         x = A.dot(x) + x
 
     print(f(x))
     print(x.sum())
-    print(time.time() - starttime - firstage)
+    print(time.time() - firstage)
 
 main()
