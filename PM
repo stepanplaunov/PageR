@@ -37,7 +37,7 @@ def main():
     x[0] = 1.0
     EPS = 10 ** (-3)  # accuracy
     firstage = time.time()
-    print(firstage)
+    print(firstage - starttime)
     while f(x) > EPS:
         x = A.dot(x) + x
 
