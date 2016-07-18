@@ -45,7 +45,7 @@ def main():
     gradx = grad(x)
     xnew = x - gradx / L
     firstage = time.time()
-    print(firstage)
+    print(firstage - starttime)
     while f(x) > EPS:
         while f_(xnew, x, L, gradx) <= f(xnew):
             L *= 2
