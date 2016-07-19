@@ -37,17 +37,9 @@ def main():
     x = np.array([0.0] * n)  # PageRank vector
     x[0] = 1.0
     EPS = 10 ** (-3)  # accuracy
-    #L = 10
-    #gradx = grad(x)
-    #xnew = x - gradx / L
     firstage = time.time()
-    print(b)
-    print(A.dot(x))
-    print(x)
-    print('---')
     r = b - A.dot(x)
     z = r
-
     while f(x) > EPS:
         r_2 = np.dot(r, r)
         alpha = r_2 / np.dot(A.dot(z), z)
@@ -58,17 +50,5 @@ def main():
     print(f(x))
     x = x / x.sum()
     print(time.time() - firstage)
-
-'''
-    while f(x) > EPS:
-        while f_(xnew, x, L, gradx) <= f(xnew):
-            L *= 2
-            xnew = x - gradx / L
-        #print(L, f(x))
-        x = xnew
-        gradx = grad(x)
-        L /= 2
-        xnew = x - grad(x) / L
-'''
 
 main()
