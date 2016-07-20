@@ -17,20 +17,19 @@ def read(graph):  # matrix reading
     data = data.T
     ones = np.array([1 / n] * n)
     data = np.row_stack((data, ones))
-    data = csr_matrix(data)
     return data
 
 def norma(vector):  # 2-norma
     return np.linalg.norm(vector, 2)
 
-def f(x):  # f(x) - permanent function
-    return 0.5 * norma(A.dot(x) - b) ** 2
+def f(Ax):  # f(x) - permanent function
+    return 0.5 * norma(Ax - b) ** 2
 
 def grad(x):  # return gradient of f(x) = 0.5 * norma(A * x) ** 2
-    return A.T.dot(A.dot(x) - b)
+    return np.dot(A.T, np.dot(A, x) - b)
 
-def f_(xnew, x, L, gradx):  # f(x) - inspection function
-    return f(x) + np.dot(gradx, xnew - x) + (L * norma(xnew - x) ** 2 / 2)
+def f_(L, gradx, fx):  # f(x) - inspection function
+    return fx - (gradx) ** 2 / (2 * L)
 
 def main():
     global A, n, x, b
@@ -39,32 +38,39 @@ def main():
     b = np.array([0.0] * (n + 1))
     b[-1] = 1.0
     b /= n
-    x = np.array([0.0] * n)  # PageRank vector
-    x[0] = 1.0
-    EPS = 10 ** (-4)  # accuracy
+    x = np.array([1.0] * n)  # PageRank vector
+    x = x / n
+    EPS = 10 ** (-5)  # accuracy
     k = 1
     m = 1000
     L = [1] * n
     firstage = time.time()
     print(firstage - starttime)
-    gradx = grad(x)
-    xnew = x - gradx
-    while k % m != 0 or f(x) > EPS:
+    counted_Ax = A.dot(x)
+    c_Ax_old = counted_Ax.copy()
+    fx = f(counted_Ax)
+    while k % m != 0 or f(counted_Ax) > EPS:
         rand = randint(0, n - 1)
-        xnew[rand] = x[rand] - gradx[rand] / L[rand]
-        while f_(xnew, x, L[rand], gradx) <= f(xnew):
+        rgrad = np.dot(A[:,rand], c_Ax_old - b)
+        counted_Ax = c_Ax_old - rgrad * A[:,rand] / L[rand]
+        xnew = x[rand] - rgrad / L[rand]
+        while f_(L[rand], rgrad, fx) <= f(counted_Ax):
+            #print(L[rand], f_(L[rand], rgrad, fx), f(counted_Ax))
             L[rand] *= 2
-            xnew[rand] = x[rand] - gradx[rand] / L[rand]
-        #print(L, f(x))
-        x[rand] = xnew[rand]
-        gradx = grad(x)
+            xnew = x[rand] - rgrad / L[rand]
+            counted_Ax = c_Ax_old - rgrad * A[:,rand] / L[rand]
+            #print(L[rand])
+        #print(counted_Ax)
+        #print(L)
+        x[rand] = xnew
+        c_Ax_old = counted_Ax
+        fx = f(c_Ax_old)
         L[rand] /= 2
-        xnew[rand] = x[rand] - gradx[rand] / L[rand]
         k += 1
-    print(f(x))
+    print(f(counted_Ax))
     print(x.sum())
-    x = x / x.sum()
-    print(f(x))
-    print(time.time() - firstage )
+    counted_Ax = counted_Ax / x.sum()
+    print(f(counted_Ax))
+    print(time.time() - firstage)
 
 main()
