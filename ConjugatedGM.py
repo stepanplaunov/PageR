@@ -1,6 +1,8 @@
 import numpy as np
 import time
 from scipy.sparse import csr_matrix
+from scipy.optimize import fmin_cg
+from scipy.optimize import fmin_bfgs
 
 starttime = time.time()
 prograph = open('probability graph.txt')
@@ -14,6 +16,8 @@ def read(graph):  # matrix reading
         data[i][i] -= 1
     data = np.array(data)
     data = data.T
+    ones = np.array([1 / n] * n)
+    data = np.row_stack((data, ones))
     data = csr_matrix(data)
     return data
 
@@ -26,29 +30,18 @@ def f(x):  # f(x) - permanent function
 def grad(x):  # return gradient of f(x) = 0.5 * norma(A * x) ** 2
     return A.T.dot(A.dot(x) - b)
 
-def f_(xnew, x, L, gradx):  # f(x) - inspection function
-    return f(x) + np.dot(gradx, xnew - x) + (L * norma(xnew - x) ** 2 / 2)
-
 def main():
     global A, n, x, b
     A = read(prograph)  # probability graph (matrix)
     prograph.close()
-    b = np.array([0.0] * (n))
-    x = np.array([0.0] * n)  # PageRank vector
+    b = np.array([0] * (n + 1))
+    b[-1] = 1.0
+    b = b / n
+    x = np.array([0] * n)                 #PageRank vector
     x[0] = 1.0
-    EPS = 10 ** (-3)  # accuracy
-    firstage = time.time()
-    r = b - A.dot(x)
-    z = r
-    while f(x) > EPS:
-        r_2 = np.dot(r, r)
-        alpha = r_2 / np.dot(A.dot(z), z)
-        x = x + alpha * z
-        r = r - alpha * A.dot(z)
-        beta = np.dot(r, r) / r_2
-        z = r + beta * z
-    print(f(x))
-    x = x / x.sum()
-    print(time.time() - firstage)
+    era = time.time()
+    #print(fmin_bfgs(f, x, grad).sum())
+    print(fmin_cg(f, x, grad).sum())
+    print(time.time() - era)
 
 main()
