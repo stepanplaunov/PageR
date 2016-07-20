@@ -4,29 +4,28 @@ import time
 matrix = open('probability graph.txt', 'w')
 #data = open("inbox_data", "w")
 
-V = 50000
+V = 10000
 K = 10
-a = 10000
+a = 9
 
 def rand(n):
-    f = rnd(1, (a + 1) * n)
-    if f == 1:
+    f = rnd(1, (a + 1) * (n + 1) - 1)
+    if f <= a:
         return(n)
-    elif f <= a:
-        return(rnd(0, n - 1))
     else:
         return(vertexs[rnd(0, len(vertexs) - 1)])
 
 def edge(j, i):
+    global vertexs
     vertexs.append(j)
     vertexs.append(i)
+    graph[j // K][i // K] += 1
     graph[i // K][j // K] += 1
+    #inbox[j // K].append(i // K)
     #inbox[i // K].append(j // K)
-    if j // K != i // K:
-        graph[j // K][i // K] += 1
-        #inbox[j // K].append(i // K)
-    numbers[i // K] += 1
     numbers[j // K] += 1
+    numbers[i // K] += 1
+    vertexs += (a - 1) * [i]
 
 
 def for_print():
@@ -46,12 +45,12 @@ def division():
             graph[i][j] /= numbers[i]
 
 def main():
-    global vertexs, graph, numbers, inbox
+    global vertexs, graph, numbers#, inbox
     starttime = time.time()
     graph = [[0] * (V // K) for i in range(V // K)]
     numbers = [0] * (V // K)
     graph[0][0] = 1
-    vertexs = [0]
+    vertexs = [0, 0] + (a - 1) * [0]
     #inbox = [[] for i in range(V // K)]
     for i in range(1, V):
         j = rand(i)
