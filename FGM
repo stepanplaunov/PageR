@@ -1,3 +1,5 @@
+#Fast Gradient method
+
 import numpy as np
 import time
 from scipy.sparse import csr_matrix
@@ -7,7 +9,7 @@ starttime = time.time()
 
 def read(graph): #matrix reading
     global n
-    n = int(graph.readline()) #n - length
+    n = int(graph.readline()) 
     data = [[] for i in range(n)]
     for i in range(n):
         data[i] = list(map(float, graph.readline().split()))
@@ -64,8 +66,6 @@ def main():
         ynew = (2 * z + k * x) / (k + 2)
         xnew = ynew - grady / L
         znew = z - (k + 2) * grady / (2 * L)
-    print(f(x))
-    print(sum(x))
     x = x / x.sum()
     print(f(x))
     print(time.time() - firstage)
