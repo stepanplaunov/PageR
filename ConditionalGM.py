@@ -13,6 +13,7 @@ def read(graph):  # matrix reading
     for i in range(n):
         data[i] = list(map(float, graph.readline().split()))
         data[i][i] -= 1
+    print(2)
     data = np.array(data)
     data = data.T
     #ones = np.array([1 / n] * n)
@@ -29,9 +30,6 @@ def f(x):  # f(x) - permanent function
 def grad(x):  # return gradient of f(x) = 0.5 * norma(A * x) ** 2
     return A.T.dot(A.dot(x))
 
-def f_(xnew, x, L, gradx):  # f(x) - inspection function
-    return f(x) + np.dot(gradx, xnew - x) + (L * norma(xnew - x) ** 2 / 2)
-
 def gamma(k):
     return 2 / (k + 2)
 
@@ -44,7 +42,8 @@ def main():
     EPS = 10 ** (-4)  # accuracy
     beta = 1
     D = np.array(grad(z))
-    y = None             # argmin(heap)
+    print(1)
+    AdotAT = A.T.dot(A).toarray()
     firstage = time.time()
     print(10 * EPS ** (-1))
 
@@ -52,15 +51,18 @@ def main():
     k = 1
     y = np.array([0.0 for i in range(n)])
     iold = 0
-    while f(beta * z) > EPS:
+    while k % 1000 != 0 or f(beta * z) > EPS:
+        ti = time.time()
         i = np.argmin(D)
         y[iold] = 0.0
         y[i] = 1.0
-        z[i] += gamma(k) / beta
-        D += (gamma(k) / beta) * A.T.dot(A.toarray()[:,i])
+        sig = (gamma(k) / beta)
+        z[i] += sig
+        D += sig * AdotAT[:, i]
         beta *= (1 - gamma(k + 1))
         k += 1
         iold = i
+        print(time.time() - ti)
     print(f(beta * z))
     print(time.time() - firstage)
 
