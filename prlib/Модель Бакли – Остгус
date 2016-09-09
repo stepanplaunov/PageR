@@ -24,6 +24,4 @@ def bak_ost(V, K, a):
         numbers[j // K] += 1
         for i in graph.keys():
                 graph[i[0], i[1]] /= numbers[i[0]]        
-
-
-return graph
+    return graph
