@@ -13,7 +13,6 @@ def read(graph):  # matrix reading
     for i in range(n):
         data[i] = list(map(float, graph.readline().split()))
         data[i][i] -= 1
-    print(2)
     data = np.array(data)
     data = data.T
     #ones = np.array([1 / n] * n)
@@ -42,17 +41,12 @@ def main():
     EPS = 10 ** (-4)  # accuracy
     beta = 1
     D = np.array(grad(z))
-    print(1)
     AdotAT = A.T.dot(A).toarray()
     firstage = time.time()
-    print(10 * EPS ** (-1))
-
-    #for k in range(1, int(EPS ** (-1))):
     k = 1
     y = np.array([0.0 for i in range(n)])
     iold = 0
     while k % 1000 != 0 or f(beta * z) > EPS:
-        ti = time.time()
         i = np.argmin(D)
         y[iold] = 0.0
         y[i] = 1.0
@@ -62,7 +56,6 @@ def main():
         beta *= (1 - gamma(k + 1))
         k += 1
         iold = i
-        print(time.time() - ti)
     print(f(beta * z))
     print(time.time() - firstage)
 
