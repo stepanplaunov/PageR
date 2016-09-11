@@ -39,6 +39,7 @@ def main():
     data = read_inbox(inbox)
     x = np.array([0] * n)
     EPS = 10 ** -4
+    DELTA = 0.3    # stability factor
     stand = 0
     m = 1000
     firstage = time.time()
@@ -48,14 +49,22 @@ def main():
     k = 1
     print(f(x))
     while  k % m != 0 or f(x / k) > EPS:
-        rand = randint(0, len(data[stand]) - 1)
+        tobeornottobe = randint(0, 1000)
+        if tobeornottobe > DELTA:
+            rand = randint(0, len(data[stand]) - 1)    # adjacent vertex
+        else:
+            rand = randint(0, n)    # all vertex
         k += 1
         stand = int(data[stand][rand])
         x[stand] += 1.0
         #print(f(x) > EPS, k)
+
     x[stand] += 1
     x = x / k
     print(k)
     print(f(x))
     print(time.time() - firstage)
 main()
+
+
+
