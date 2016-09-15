@@ -49,13 +49,12 @@ def main():
     k = 1
     print(f(x))
     while  k % m != 0 or f(x / k) > EPS:
-        tobeornottobe = randint(0, 1000)
-        if tobeornottobe > DELTA:
-            rand = randint(0, len(data[stand]) - 1)    # adjacent vertex
+        tobeornottobe = randint(0, 1 // EPS)
+        if tobeornottobe > DELTA // EPS:
+            stand = int(data[stand][randint(0, len(data[stand]) - 1])    # adjacent vertex
         else:
-            rand = randint(0, n)    # all vertex
+            stand = randint(0, n)    # all vertex
         k += 1
-        stand = int(data[stand][rand])
         x[stand] += 1.0
         #print(f(x) > EPS, k)
 
