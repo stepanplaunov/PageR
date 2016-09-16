@@ -53,7 +53,7 @@ def main():
         if tobeornottobe > DELTA // EPS:
             stand = int(data[stand][randint(0, len(data[stand]) - 1])    # adjacent vertex
         else:
-            stand = randint(0, n)    # all vertex
+            stand = randint(0, n - 1)    # all vertex
         k += 1
         x[stand] += 1.0
         #print(f(x) > EPS, k)
