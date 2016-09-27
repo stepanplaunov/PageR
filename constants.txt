@@ -1,3 +1,5 @@
+n = 10000
 a = 3
-sigma = 0.5
-delta = 0.5
+DELTA = 0.5
+EPS = 0.5
+SIGMA = 0.5
