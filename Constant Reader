@@ -1,0 +1,131 @@
+# -*- coding: utf-8 -*-
+from tkinter import *
+from collections import deque
+import copy
+
+def save_constants():
+    file = 'code.txt'
+    result = []
+    text = text_input.get(1.0, 'end')
+    values = {}
+    code = list(text.split('\n'))
+    for i in range(len(code)):
+        code[i] = list(code[i].split(' '))
+    code_copy = copy.deepcopy(code)
+    lexical_code = lexical_analysis(code_copy, values)
+    syntactic_code = syntactic_analysis(lexical_code, values, result)
+    text_output.delete(1.0, 'end')
+    for string in result:
+        text_output.insert('end', str(string)+'\n')
+    save_code(file, text_input.get(1.0, 'end'))
+    return values
+    
+def run(event):
+    file = 'code.txt'
+    result = []
+    text = text_input.get(1.0, 'end')
+    values = {}
+    code = list(text.split('\n'))
+    for i in range(len(code)):
+        code[i] = list(code[i].split(' '))
+    code_copy = copy.deepcopy(code)
+    lexical_code = lexical_analysis(code_copy, values)
+    syntactic_code = syntactic_analysis(lexical_code, values, result)
+    text_output.delete(1.0, 'end')
+    for string in result:
+        text_output.insert('end', str(string)+'\n')
+    save_code(file, text_input.get(1.0, 'end'))
+
+def save_code(file, code):
+    old_file = open(file, 'w')
+    old_file.write(code)
+    
+def give_code_from_file(file):
+    code = open(file, 'r')
+    code = code.read()
+    code = list(code.split('\n'))
+    return code
+
+def name_giver(word):
+    OPERATIONS_LIST = ['=', '+', '-', 'print:']
+    NUMBERS = '1234567890'
+    if word in OPERATIONS_LIST:
+        name = 'operation'
+        return name
+    name = 'value'
+    for i in range(len(word)):
+        if word[i] not in NUMBERS:
+            name = 'variable'
+    return name
+
+def lexical_analysis(code, values):
+    for i in range(len(code)):
+        for j in range(len(code[i])):
+            name = name_giver(code[i][j])
+            if name == 'variable':
+                values[code[i][j]] = None
+            code[i][j] = [code[i][j], name]
+    return code
+
+def syntactic_analysis(code, values, result):
+    for string in code:
+        syntactic_analysis_string(string, values, result)
+
+def syntactic_analysis_string(string, values, result):
+    if string[0][1] == 'variable' and string[1][1] == 'operation':
+        argument = string[2:]
+        new_argument = do_simple_argument(argument, values)
+        values[string[0][0]] = int(new_argument)
+    if string[0][1] == 'operation':
+        argument = string[1:]
+        new_argument = do_simple_argument(argument, values)
+        result.append(int(new_argument))
+
+def do_simple_argument(argument, values):
+    result = 0
+    if argument[0][1] == 'value':
+        result = int(argument[0][0])
+    if argument[0][1] == 'variable':
+        result = values[argument[0][0]]
+    operations_queue = deque()
+    first = 0
+    for symbol in argument:
+        if symbol[1] == 'operation':
+            operations_queue.append(symbol[0])
+        else:
+            if first == 1:
+                oper = operations_queue.popleft()
+                if oper == '+':
+                    if symbol[1] == 'value':
+                        result += int(symbol[0])
+                    if symbol[1] == 'variable':
+                        result += values[symbol[0]]
+                if oper == '-':
+                    if symbol[1] == 'value':
+                        result -= int(symbol[0])
+                    if symbol[1] == 'variable':
+                        result -= values[symbol[0]]
+            if first == 0:
+                first = 1
+    return result
+
+def main():
+    global text_input
+    global text_output
+    file = 'code.txt'
+    root = Tk()
+    root.title('programm')
+    root.geometry("300x200+500+250")
+    text_input = Text(root, width=150, height=18, bd=3)
+    text_input.insert(1.0, '\n'.join(give_code_from_file(file)))
+    text_input.pack()
+    text_output = Text(root,width=150,height=18,bd=3)
+    text_output.pack()
+    constants_dict = save_constants()
+    print(constants_dict)
+    button_start = Button(root, text='Save and start', width=15)
+    button_start.bind("<Button-1>", run)
+    button_start.pack()
+    root.mainloop()
+
+main()
