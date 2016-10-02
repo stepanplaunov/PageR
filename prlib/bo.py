@@ -22,6 +22,6 @@ def bak_ost(V, K, a):
         vertex[j] += 1
         graph[j // K, i // K] += 1
         numbers[j // K] += 1
-        for i in graph.keys():
-                graph[i[0], i[1]] /= numbers[i[0]]        
+    for i in graph.keys():
+        graph[i[0], i[1]] /= numbers[i[0]]        
     return graph
