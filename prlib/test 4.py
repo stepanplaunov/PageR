@@ -1,30 +1,35 @@
-from bak_ost import bak_ost
+from finished_bo import bak_ost
 from fgm import fgm
 import math
 import numpy as np
 import time
 
 def clog(x):
-    vector = sorted(x, reverse=True)
+    vector = list(sorted(x, reverse=True))
     k = [math.log2(i) for i in range(1, len(vector) + 1)]
-    y = [math.log2(i) for i in vector]
+    ln = len(vector)
+    y = [0] * ln
+    for i in range(ln):
+        y[i] = math.log2(vector[i])
     A = np.vstack([k, np.ones(len(k))]).T
     m, c = np.linalg.lstsq(A, y)[0]
     return m
 
-result = open("test_res.txt", "w")
-a_variants = [1, 2, 4, 6, 8, 10, 1000, 2000, 3000, 4000, 5000]
-for a in a_variants:
-    result.write(str(a) + "\n")
-    print(a)
-    for k in range(5):
-        graph = bak_ost(1000000, 10, a)
-        t = time.time()
-        x = fgm(graph)
-        t  = time.time() - t
-        lg = clog(x)
-        print(lg, t)
-        result.write(str(lg) + " " + str(t) + "\n")
-        graph = 0
+def main():
+    result = open("test_res2.txt", "w")
+    a_variants = [0.5, 0.25, 0.75, 0.3]
+    for a in a_variants:
+        result.write(str(a) + "\n")
+        print(a)
+        for k in range(5):
+            graph = bak_ost(100000, 10, a)
+            t = time.time()
+            x = fgm(graph)
+            t  = time.time() - t
+            lg = clog(x)
+            print(lg, t)
+            result.write(str(lg) + " " + str(t) + "\n")
+            graph = 0
+    result.close()
 
-result.close()
+main()
