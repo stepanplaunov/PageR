@@ -8,9 +8,7 @@ def clog(x):
     vector = list(sorted(x, reverse=True))
     k = [math.log2(i) for i in range(1, len(vector) + 1)]
     ln = len(vector)
-    y = [0] * ln
-    for i in range(ln):
-        y[i] = math.log2(vector[i])
+    y = [math.log2(i) for i in vector]
     A = np.vstack([k, np.ones(len(k))]).T
     m, c = np.linalg.lstsq(A, y)[0]
     return m
