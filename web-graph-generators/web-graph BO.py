@@ -20,11 +20,11 @@ def edge(j, i):
     vertexs.append(j)
     vertexs.append(i)
     graph[j // K][i // K] += 1
-    graph[i // K][j // K] += 1
+    #graph[i // K][j // K] += 1
     #inbox[j // K].append(i // K)
     #inbox[i // K].append(j // K)
     numbers[j // K] += 1
-    numbers[i // K] += 1
+    #numbers[i // K] += 1
     vertexs += (a - 1) * [i]
 
 
