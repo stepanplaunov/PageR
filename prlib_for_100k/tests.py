@@ -15,12 +15,12 @@ def clog(x):
 
 def main():
     result = open("test_res2.txt", "w")
-    a_variants = [10]
+    a_variants = [2, ]
     for a in a_variants:
         result.write(str(a) + "\n")
         print(a)
         for k in range(5):
-            graph = bak_ost(100000, 10, a)
+            graph = bak_ost(1000000, 10, a)
             t = time.time()
             x = fgm(graph)
             t  = time.time() - t
