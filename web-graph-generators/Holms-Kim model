@@ -1,0 +1,30 @@
+import random
+matrix = open('probability_graph.txt', 'w')
+V = 1
+p = 0.2
+
+def smth():
+    return smth
+
+def findNeighbour(previousVertex):
+    firstProbability = random.randint(0, 1000)
+    if firstProbability < p * 1000:
+        secondProbability = random.randint(0, powers[previousVertex])    #choose between only previous vertex's neighbours (TF-step)
+        sumBeforeVertex = 0 
+        for i in range(V):
+            sumBeforeVertex += graph[previousVertex][i]
+            if sumBeforeVertex >= secondProbability:
+                return i
+    else:
+        secondProbability = random.randint(0, sum(powers))    #probability to go to the i-vertex growths like i-vertex's power (PA-step)
+        sumBeforeVertex = 0
+        for i in range(len(powers)):
+            sumBeforeVertex += powers[i]
+            if sumBeforeVertex >= secondProbability:
+                return i
+
+def main():
+    global graph
+    graph = [[0] for i in range(V) for j in range(V)]
+    powers = [1 for i in range(V)]
+    graph[0] =
